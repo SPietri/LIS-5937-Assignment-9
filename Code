@@ -1,0 +1,23 @@
+library(ggplot2)
+library(lattice)
+library(colorspace)
+library(dplyr)
+library(ggthemes)
+
+head(diamonds)
+colors()
+
+clarity <- as.character(diamonds$clarity)
+barplot(table(clarity), main = "Clarity of Diamonds", xlab= "Clarity (Worst to Best)", ylab= "Frequency", 
+        col = "violetred2", border = "aquamarine4")
+
+xyplot(price   # price is our y axis variable 
+       ~ carat # carat is our x value
+       |  cut, # this is our panel level. This is what we are grouping by to create multi panels. 
+       diamonds, # here we specify the data set we are using 
+       grid = TRUE, # this makes a grid background
+       scales = list(y= list(log =10, equispaced.log = FALSE)), # this is the log function I applied to my y variable price. The equispace.log = F means that it doesnt show on the graph. 
+       group = clarity, # This is what the graph points were colored on 
+       auto.key = list(columns= nlevels(diamonds$clarity))) # legend
+       
+a <- ggplot(diamonds, aes(carat, price, color = diamonds$clarity))+ geom_point(alpha= .9)+ facet_grid(cut~.)+ theme()+ ggtitle("Price by Carat panels by Cut") + labs(color= "Clarity")
